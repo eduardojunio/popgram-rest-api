@@ -15,6 +15,6 @@ router.get('/health-check', (req, res) =>
 router.use('/users', userRoutes);
 
 // mount auth routes at /auth
-router.use('/auth', authRoutes);
+router.use('/login', authRoutes);
 
 module.exports = router;
