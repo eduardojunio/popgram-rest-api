@@ -34,5 +34,12 @@ module.exports = {
       author: Joi.string().required(),
       content: Joi.string().required()
     }
+  },
+
+  // PUT /api/photos/{photo-id}/likes
+  likePhoto: {
+    body: {
+      user: Joi.string().required()
+    }
   }
 };
