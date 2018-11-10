@@ -26,5 +26,13 @@ module.exports = {
       username: Joi.string().required(),
       password: Joi.string().required()
     }
+  },
+
+  // POST /api/photos/{photo-id}/comments
+  createComment: {
+    body: {
+      author: Joi.string().required(),
+      content: Joi.string().required()
+    }
   }
 };
