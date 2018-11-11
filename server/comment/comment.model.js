@@ -42,6 +42,17 @@ CommentSchema.statics = {
       .skip(+skip)
       .limit(+limit)
       .exec();
+  },
+
+  total(photoId) {
+    return this.find({ photoId })
+      .exec()
+      .then((comments) => {
+        if (comments) {
+          return comments.length;
+        }
+        return 0;
+      });
   }
 };
 

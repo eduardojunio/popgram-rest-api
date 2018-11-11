@@ -13,4 +13,12 @@ const LikeSchema = new mongoose.Schema({
   }
 });
 
+LikeSchema.statics = {
+  liked(user, photoId) {
+    return this.findOne({ user, photoId })
+      .exec()
+      .then(like => !!like);
+  }
+};
+
 module.exports = mongoose.model('Like', LikeSchema);
