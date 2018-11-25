@@ -26,6 +26,16 @@ UserSchema.statics = {
         const err = new APIError('No such user exists!', httpStatus.NOT_FOUND);
         return Promise.reject(err);
       });
+  },
+
+  follow(username) {
+    return this.get(username)
+      .then((user) => {
+        const updatedFollowing = { following: !user.following };
+        return this.update({ username }, updatedFollowing)
+            .exec()
+            .then(() => updatedFollowing);
+      });
   }
 };
 
