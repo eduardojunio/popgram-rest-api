@@ -1,80 +1,28 @@
+const mockData = require('../timeline/mock.json');
 const User = require('./user.model');
+const httpStatus = require('http-status');
 
-/**
- * Load user and append to req.
- */
-function load(req, res, next, id) {
-  User.get(id)
-    .then((user) => {
-      req.user = user; // eslint-disable-line no-param-reassign
-      return next();
-    })
-    .catch(e => next(e));
-}
-
-/**
- * Get user
- * @returns {User}
- */
 function get(req, res) {
-  return res.json(req.user);
+  User.get(req.params.userId)
+    .then((user) => {
+      res.json({
+        user: {
+          fullName: 'Din Din',
+          description: 'Eu viajo pelo mundo em minha moeda-foguete e tenho um mascote porquinho',
+          picture: 'https://scontent.cdninstagram.com/vp/19e7fa54f806c3ddd061f525f965b280/5C41420B/t51.2885-15/sh0.08/e35/s750x750/41519374_268747557299627_5213480865193191470_n.jpg?se=4'
+        },
+        followers: user.following ? 4573 : 4572,
+        following: 1078,
+        amIFollowing: !!user.following,
+        postsCount: 20,
+        posts: mockData.data
+      });
+    })
+    .catch((e) => {
+      res
+        .status(httpStatus.INTERNAL_SERVER_ERROR)
+        .json({ message: e.message });
+    });
 }
 
-/**
- * Create new user
- * @property {string} req.body.username - The username of user.
- * @property {string} req.body.mobileNumber - The mobileNumber of user.
- * @returns {User}
- */
-function create(req, res, next) {
-  const user = new User({
-    username: req.body.username,
-    mobileNumber: req.body.mobileNumber
-  });
-
-  user.save()
-    .then(savedUser => res.json(savedUser))
-    .catch(e => next(e));
-}
-
-/**
- * Update existing user
- * @property {string} req.body.username - The username of user.
- * @property {string} req.body.mobileNumber - The mobileNumber of user.
- * @returns {User}
- */
-function update(req, res, next) {
-  const user = req.user;
-  user.username = req.body.username;
-  user.mobileNumber = req.body.mobileNumber;
-
-  user.save()
-    .then(savedUser => res.json(savedUser))
-    .catch(e => next(e));
-}
-
-/**
- * Get user list.
- * @property {number} req.query.skip - Number of users to be skipped.
- * @property {number} req.query.limit - Limit number of users to be returned.
- * @returns {User[]}
- */
-function list(req, res, next) {
-  const { limit = 50, skip = 0 } = req.query;
-  User.list({ limit, skip })
-    .then(users => res.json(users))
-    .catch(e => next(e));
-}
-
-/**
- * Delete user.
- * @returns {User}
- */
-function remove(req, res, next) {
-  const user = req.user;
-  user.remove()
-    .then(deletedUser => res.json(deletedUser))
-    .catch(e => next(e));
-}
-
-module.exports = { load, get, create, update, list, remove };
+module.exports = { get };
