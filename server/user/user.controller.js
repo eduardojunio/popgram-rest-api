@@ -25,4 +25,14 @@ function get(req, res) {
     });
 }
 
-module.exports = { get };
+function follow(req, res) {
+  User.follow(req.params.userId)
+    .then((user) => {
+      res.json(user);
+    })
+    .catch((e) => {
+      res.json({ message: e.message });
+    });
+}
+
+module.exports = { get, follow };
